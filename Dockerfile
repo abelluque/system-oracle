@@ -1,4 +1,4 @@
-FROM registry.redhat.io/3scale-amp2/system-rhel9:3scale2.16.1
+FROM registry.redhat.io/3scale-amp2/system-rhel9:3scale2.16.3
 USER root
 
 COPY ./oracle-client-files/instantclient-basic*-linux.*.zip \
