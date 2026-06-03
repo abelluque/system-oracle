@@ -7,7 +7,7 @@ COPY ./oracle-client-files/instantclient-basic*-linux.*.zip \
      /opt/system/vendor/oracle/
 
 ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_19_18/ \
-    ORACLE_HOME=/opt/oracle/instantclien_19_18t/ \
+    ORACLE_HOME=/opt/oracle/instantclien_19_18/ \
     DB=oracle \
     TZ=utc \
     NLS_LANG=AMERICAN_AMERICA.UTF8
