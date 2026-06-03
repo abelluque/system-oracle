@@ -12,7 +12,7 @@ ENV LD_LIBRARY_PATH=/opt/oracle/instantclient/ \
     TZ=utc \
     NLS_LANG=AMERICAN_AMERICA.UTF8
 
-RUN dnf install wget unzip make ruby-devel gcc gcc-c++ redhat-rpm-config libaio libnsl -y \
+RUN dnf install wget unzip make ruby-devel gcc gcc-c++ redhat-rpm-config libaio libnsl2 -y \
     && ./script/oracle/install-instantclient-packages.sh \
     && bundle install --local --jobs $(grep -c processor /proc/cpuinfo) --retry=5
 
