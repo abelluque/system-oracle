@@ -17,8 +17,8 @@ RUN dnf install wget unzip make ruby-devel gcc gcc-c++ redhat-rpm-config libaio 
     && ./script/oracle/install-instantclient-packages.sh \
     && ln -s /opt/oracle/instantclient_19_18/sdk/include /opt/oracle/instantclient_19_18/include \
     && ln -s /opt/oracle/instantclient_19_18 /opt/oracle/instantclient_19_18/lib64 \
-    && sed -i 's/try_constant("OCI_MAJOR_VERSION", "oci.h")/19/g' /opt/system/vendor/bundle/ruby/3.1.0/gems/ruby-oci8-2.2.12/ext/oci8/extconf.rb \
-    && bundle config --delete build.ruby-oci8 \
+    && bundle config build.ruby-oci8 "--with-instant-client-include=/opt/oracle/instantclient_19_18/sdk/include --with-instant-client-lib=/opt/oracle/instantclient_19_18" \
     && bundle install --local --jobs $(grep -c processor /proc/cpuinfo) --retry=5
+
 
 USER 1001
