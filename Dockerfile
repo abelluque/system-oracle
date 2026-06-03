@@ -14,7 +14,8 @@ ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_19_18/ \
 
 RUN dnf install wget unzip make ruby-devel gcc gcc-c++ redhat-rpm-config libaio libnsl2 -y \
     && ./script/oracle/install-instantclient-packages.sh \
-    && bundle config build.ruby-oci8 --with-instant-client-include=/opt/oracle/instantclient_19_18/sdk/include --with-instant-client-lib=/opt/oracle/instantclient_19_18 \
+    && ln -s /opt/oracle/instantclient_19_18/sdk/include /opt/oracle/instantclient_19_18/include \
+    && ln -s /opt/oracle/instantclient_19_18 /opt/oracle/instantclient_19_18/lib64 \
     && bundle install --local --jobs $(grep -c processor /proc/cpuinfo) --retry=5
 
 USER 1001
