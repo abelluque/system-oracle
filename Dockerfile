@@ -6,7 +6,6 @@ COPY ./oracle-client-files/instantclient-basic*-linux.*.zip \
      ./oracle-client-files/instantclient-odbc-linux.*.zip \
      /opt/system/vendor/oracle/
 
-# STEP 4/8
 ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_19_18/ \
     ORACLE_HOME=/opt/oracle/instantclient_19_18/ \
     OCI_VERSION=19 \
@@ -14,10 +13,12 @@ ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_19_18/ \
     TZ=utc \
     NLS_LANG=AMERICAN_AMERICA.UTF8
 
-# STEP 5/8
 RUN dnf install wget unzip make ruby-devel gcc gcc-c++ redhat-rpm-config libaio libnsl2 -y \
     && ./script/oracle/install-instantclient-packages.sh \
-    && bundle config build.ruby-oci8 --with-instant-client-include=/opt/oracle/instantclient_19_18/sdk/include --with-instant-client-lib=/opt/oracle/instantclient_19_18 \
+    && ln -s /opt/oracle/instantclient_19_18/sdk/include /opt/oracle/instantclient_19_18/include \
+    && ln -s /opt/oracle/instantclient_19_18 /opt/oracle/instantclient_19_18/lib64 \
+    && sed -i 's/try_constant("OCI_MAJOR_VERSION", "oci.h")/19/g' /opt/system/vendor/bundle/ruby/3.1.0/gems/ruby-oci8-2.2.12/ext/oci8/extconf.rb \
+    && bundle config --delete build.ruby-oci8 \
     && bundle install --local --jobs $(grep -c processor /proc/cpuinfo) --retry=5
 
 USER 1001
