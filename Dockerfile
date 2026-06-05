@@ -14,7 +14,7 @@ ENV LD_LIBRARY_PATH=/opt/oracle/instantclient/:$LD_LIBRARY_PATH \
     NLS_LANG=AMERICAN_AMERICA.UTF8
 
 RUN mkdir -p vendor/oracle \
-    && dnf install wget unzip make ruby-devel gcc gcc-c++ redhat-rpm-config libaio libnsl2 -y \
+    && dnf install wget unzip make ruby-devel gcc gcc-c++ redhat-rpm-config libaio libnsl2 rust-toolset clang -y \
     && LIBNSL=$(find /usr/lib64 -maxdepth 1 -name "libnsl.so.*" ! -name "libnsl.so.1" | head -n 1) \
     && if [ -n "$LIBNSL" ]; then ln -sf $LIBNSL /usr/lib64/libnsl.so.1; fi \
     && ./script/oracle/install-instantclient-packages.sh \
@@ -22,7 +22,11 @@ RUN mkdir -p vendor/oracle \
     && ldconfig \
     && ln -sf /opt/oracle/instantclient_19_18/sdk/include /opt/oracle/instantclient_19_18/include \
     && ln -sf /opt/oracle/instantclient_19_18 /opt/oracle/instantclient_19_18/lib64 \
-    && bundle config build.ruby-oci8 "--with-instant-client-dir=/opt/oracle/instantclient_19_18" \
-    && bundle install --local --jobs $(grep -c processor /proc/cpuinfo) --retry=5
+    && chown -R 1001:0 /opt/system/Gemfile* /opt/system/.bundle /opt/system/vendor
 
 USER 1001
+
+RUN bundle config unset frozen \
+    && bundle config unset deployment \
+    && bundle config build.ruby-oci8 "--with-instant-client-dir=/opt/oracle/instantclient_19_18" \
+    && bundle install --jobs $(grep -c processor /proc/cpuinfo) --retry=5
